@@ -11,8 +11,9 @@ class DashboardController extends Controller
     function index(){
 
         // $role = Auth::role();
-        $role = 'client';
+        $user = Auth::user();
         
+        $role = $user['role'];
 
         switch ($role){
             case 'admin':
