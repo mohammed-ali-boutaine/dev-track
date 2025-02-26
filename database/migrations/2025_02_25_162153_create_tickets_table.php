@@ -24,13 +24,12 @@ return new class extends Migration
             $table->string('systeme');
             $table->foreignId('software_id')->constrained('softwares')->onDelete('cascade');
             $table->enum('status', ['open', 'in_progress', 'closed'])->default('open');
-            
-            $table->foreignId('client_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('dev_id')->constrained('users')->onDelete('cascade');
-            $table->boolean('signed_in');
-            $table->timestamp('signed_in_at')->nullable();
 
+            $table->foreignId('client_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null'); // Nullable
+            $table->foreignId('developer_id')->nullable()->constrained('users')->onDelete('set null'); // Nullable
+            $table->boolean('signed_in')->default(false);
+            $table->timestamp('signed_in_at')->nullable();
             $table->timestamps();
         });
     }
@@ -42,6 +41,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('tickets');
         Schema::dropIfExists('softwares');
-
     }
 };

@@ -2,12 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-
 class Client extends User
 {
-    //
-    protected $attributes = ['role' => 'client'];
+    protected $table = 'users'; // Uses the same table
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('client', function ($query) {
+            $query->where('role', 'client');
+        });
+    }
+
+    // A client has many tickets
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }
+
