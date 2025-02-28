@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('systeme');
             $table->foreignId('software_id')->constrained('softwares')->onDelete('cascade');
             $table->enum('status', ['open', 'in_progress', 'closed'])->default('open');
+            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium'); // Added priority
 
             $table->foreignId('client_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null'); // Nullable

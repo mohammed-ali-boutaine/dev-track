@@ -3,440 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Dashboard - Developer Ticket System</title>
+    <title>Client Ticket Dashboard</title>
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
+        
         body {
-            background-color: #f5f5f5;
+            background-color: #f5f7fa;
+            display: flex;
             min-height: 100vh;
         }
-        .navbar {
-            background-color: #333;
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
             color: white;
-            padding: 1rem 2rem;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-brand {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #3d5166;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #34495e;
+            border-left: 4px solid #3498db;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+        
+        /* Header/Navbar */
+        .header {
+            background-color: white;
+            height: 70px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .navbar h1 {
-            font-size: 1.5rem;
-        }
-        .user-info {
+        
+        .profile-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
-        .user-info img {
+        
+        .profile-section:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .profile-name {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: #ddd;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #222;
+            background-color: #3498db;
             color: white;
-            position: fixed;
-            height: calc(100vh - 70px);
-            padding: 20px 0;
-        }
-        .sidebar ul {
-            list-style: none;
-        }
-        .sidebar li {
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .sidebar li:hover, .sidebar li.active {
-            background-color: #4CAF50;
-        }
-        .sidebar li a {
-            color: white;
-            text-decoration: none;
-            display: block;
-        }
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .dashboard-header {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
             display: flex;
-            flex-direction: column;
-        }
-        .stat-title {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        .stat-value {
-            font-size: 28px;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            color: #333;
         }
-        .stat-trend {
-            margin-top: 10px;
-            font-size: 14px;
+        
+        /* Content Container */
+        .container {
+            padding: 30px;
         }
-        .trend-up {
-            color: #4CAF50;
-        }
-        .trend-down {
-            color: #f44336;
-        }
-        .dashboard-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .ticket-section, .activity-section, .performance-section {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .section-header {
+        
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-        .section-title {
-            font-size: 18px;
-            color: #333;
-            font-weight: 600;
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
         }
-        .view-all {
-            color: #4CAF50;
-            text-decoration: none;
-            font-size: 14px;
+        
+        .create-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
-        .view-all:hover {
-            text-decoration: underline;
+        
+        .create-btn:hover {
+            background-color: #2980b9;
         }
-        table {
+        
+        .tickets-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .tickets-table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
-            padding: 12px 15px;
+        
+        .tickets-table th {
+            background-color: #f1f3f6;
+            padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            color: #2c3e50;
+            font-weight: bold;
+            border-bottom: 1px solid #e1e5ea;
         }
-        th {
-            color: #666;
-            font-weight: 600;
-            font-size: 14px;
+        
+        .tickets-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e1e5ea;
+            color: #34495e;
         }
-        tr:last-child td {
+        
+        .tickets-table tr:last-child td {
             border-bottom: none;
         }
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        
+        .tickets-table tr:hover {
+            background-color: #f9fafc;
         }
+        
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
         .status-open {
             background-color: #e3f2fd;
             color: #1976d2;
         }
+        
         .status-in-progress {
             background-color: #fff8e1;
-            color: #ffa000;
+            color: #ff8f00;
         }
-        .status-resolved {
-            background-color: #e8f5e9;
-            color: #4caf50;
-        }
+        
         .status-closed {
-            background-color: #f5f5f5;
-            color: #9e9e9e;
-        }
-        .priority-high {
-            color: #f44336;
-            font-weight: bold;
-        }
-        .activity-list {
-            list-style: none;
-        }
-        .activity-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: flex-start;
-        }
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        .activity-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
             background-color: #e8f5e9;
-            color: #4CAF50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 18px;
+            color: #388e3c;
         }
-        .activity-content {
-            flex: 1;
+        
+        .view-link {
+            color: #3498db;
+            text-decoration: none;
         }
-        .activity-text {
-            margin-bottom: 5px;
-            line-height: 1.4;
+        
+        .view-link:hover {
+            text-decoration: underline;
         }
-        .activity-time {
-            font-size: 12px;
-            color: #888;
+        
+        .logout-link {
+            color: #ff6b6b;
         }
-        .performance-metrics {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        .metric {
-            text-align: center;
-            padding: 15px;
-            flex: 1;
-            border-right: 1px solid #eee;
-        }
-        .metric:last-child {
-            border-right: none;
-        }
-        .metric-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .metric-label {
-            font-size: 14px;
-            color: #666;
-        }
-        .progress-container {
-            width: 100%;
-            height: 6px;
-            background-color: #eee;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        .progress-bar {
-            height: 100%;
-            background-color: #4CAF50;
-        }
-        .mobile-menu {
+        
+        /* Mobile Responsive */
+        .menu-toggle {
             display: none;
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: white;
+            color: #2c3e50;
+            font-size: 24px;
             cursor: pointer;
+            margin-right: auto;
         }
-        @media (max-width: 992px) {
-            .dashboard-row {
-                grid-template-columns: 1fr;
-            }
-        }
+        
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                z-index: 1000;
+                width: 0;
+                padding: 0;
+                z-index: 100;
             }
+            
             .sidebar.active {
-                transform: translateX(0);
+                width: 250px;
+                padding: 20px 0;
             }
+            
             .main-content {
                 margin-left: 0;
+                width: 100%;
             }
-            .mobile-menu {
+            
+            .menu-toggle {
                 display: block;
             }
-            .navbar h1 {
-                font-size: 1.2rem;
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .tickets-table th:nth-child(3),
+            .tickets-table td:nth-child(3) {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div style="display: flex; align-items: center;">
-            <button class="mobile-menu">☰</button>
-            <h1>Developer Ticket System</h1>
-        </div>
-        <div class="user-info">
-            <span>Bob Smith</span>
-            <img src="/api/placeholder/40/40" alt="Developer Profile">
-        </div>
-    </nav>
-
-    <aside class="sidebar">
-        <ul>
-            <li class="active"><a href="#">Dashboard</a></li>
-            <li><a href="assigned-tickets.html">Assigned Tickets</a></li>
-            <li><a href="unassigned-tickets.html">Unassigned Tickets</a></li>
-            <li><a href="developer-profile.html">Profile</a></li>
-            <li><a href="developer-settings.html">Settings</a></li>
-            <li><a href="login.html">Logout</a></li>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">TicketSystem</div>
+        <ul class="sidebar-menu">
+            <li><a href="/dashboard" class="active"><i>📊</i> Dashboard</a></li>
+            <li><a href="/ticket/create"><i>➕</i> Create Ticket</a></li>
+            <li><a href="/profile"><i>👤</i> Profile</a></li>
+            <li><a href="/dashboard"><i>⚙️</i> Settings</a></li>
+            <li>
+                <a id="logout">Logout</a>
+            </li>
         </ul>
-    </aside>
-
-    <main class="main-content">
-        <div class="dashboard-header">
-            <div class="stat-card">
-                <div class="stat-title">Assigned Tickets</div>
-                <div class="stat-value">12</div>
-                <div class="stat-trend trend-up">↑ 3 from last week</div>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header with Profile -->
+        <header class="header">
+            <button class="menu-toggle">☰</button>
+            <div class="profile-section">
+                <span class="profile-name">John Doe</span>
+                <div class="avatar">JD</div>
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-title">Tickets Resolved</div>
-                <div class="stat-value">8</div>
-                <div class="stat-trend trend-up">↑ 2 from last week</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-title">Average Resolution Time</div>
-                <div class="stat-value">2.5 days</div>
-                <div class="stat-trend trend-down">↓ 0.3 days from last week</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-title">Client Satisfaction</div>
-                <div class="stat-value">4.8/5</div>
-                <div class="stat-trend trend-up">↑ 0.2 from last week</div>
-            </div>
-        </div>
+        </header>
         
-        <div class="dashboard-row">
-            <div class="ticket-section">
-                <div class="section-header">
-                    <h2 class="section-title">Assigned Tickets</h2>
-                    <a href="assigned-tickets.html" class="view-all">View All</a>
+        <!-- Content Container -->
+        <div class="container">
+            <div class="dashboard-header">
+                <div>
+                    <h1>My Tickets</h1>
+                    <p>Manage and track all your support tickets</p>
                 </div>
-                
-                <table>
+                <button class="create-btn">+ Create New Ticket</button>
+            </div>
+            
+            <div class="tickets-container">
+                <table class="tickets-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Client</th>
-                            <th>Priority</th>
+                            <th>Ticket ID</th>
+                            <th>Subject</th>
+                            <th>Date Created</th>
                             <th>Status</th>
-                            <th>Due Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>#1001</td>
-                            <td><a href="ticket-detail.html">Login page not working on mobile</a></td>
-                            <td>Acme Inc.</td>
-                            <td class="priority-high">High</td>
-                            <td><span class="status status-in-progress">In Progress</span></td>
-                            <td>Feb 26, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>#1003</td>
-                            <td><a href="ticket-detail.html">Fix typo on homepage</a></td>
-                            <td>XYZ Corp</td>
-                            <td>Low</td>
-                            <td><span class="status status-resolved">Resolved</span></td>
-                            <td>Feb 28, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>#1007</td>
-                            <td><a href="ticket-detail.html">Implement dark mode</a></td>
-                            <td>ABC Ltd</td>
-                            <td>Medium</td>
-                            <td><span class="status status-resolved">Resolved</span></td>
-                            <td>Mar 3, 2025</td>
-                        </tr>
-                        <tr>
-                            <td>#1010</td>
-                            <td><a href="ticket-detail.html">Database optimization</a></td>
-                            <td>Tech Solutions</td>
-                            <td class="priority-high">High</td>
+                            <td>#TK-1001</td>
+                            <td>Payment issue with recent order</td>
+                            <td>Feb 24, 2025</td>
                             <td><span class="status status-open">Open</span></td>
-                            <td>Feb 27, 2025</td>
+                            <td><a href="#view-ticket-1001" class="view-link">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>#TK-1002</td>
+                            <td>Account access problem</td>
+                            <td>Feb 20, 2025</td>
+                            <td><span class="status status-in-progress">In Progress</span></td>
+                            <td><a href="#view-ticket-1002" class="view-link">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>#TK-998</td>
+                            <td>Product delivery delayed</td>
+                            <td>Feb 15, 2025</td>
+                            <td><span class="status status-closed">Closed</span></td>
+                            <td><a href="#view-ticket-998" class="view-link">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>#TK-994</td>
+                            <td>Feature request for mobile app</td>
+                            <td>Feb 12, 2025</td>
+                            <td><span class="status status-closed">Closed</span></td>
+                            <td><a href="#view-ticket-994" class="view-link">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>#TK-985</td>
+                            <td>Billing discrepancy</td>
+                            <td>Feb 10, 2025</td>
+                            <td><span class="status status-closed">Closed</span></td>
+                            <td><a href="#view-ticket-985" class="view-link">View Details</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            
-            <div class="activity-section">
-                <div class="section-header">
-                    <h2 class="section-title">Recent Activity</h2>
-                </div>
-                
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-icon">✓</div>
-                        <div class="activity-content">
-                            <div class="activity-text">You resolved ticket <strong>#1003</strong> - Fix typo on homepage</div>
-                            <div class="activity-time">2 hours ago</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">✓</div>
-                        <div class="activity-content">
-                            <div class="activity-text">You resolved ticket <strong>#1007</strong> - Implement dark mode</div>
-                            <div class="activity-time">Yesterday</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">+</div>
-                        <div class="activity-content">
-                            <div class="activity-text">You were assigned ticket <strong>#1010</strong> - Database optimization</div>
-                            <div class="activity-time">Yesterday</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">+</div>
-                        <div class="activity-content">
-                            <div class="activity-text">You were assigned ticket <strong>#1001</strong> - Login page not working on mobile</div>
-                            <div class="activity-time">2 days ago</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </div>
-        
-        <div class="performance-section">
-            <div class="section-header">
-                <h2 class="section-title">Your Performance</h2>
-            </div>
-            
-            <div class="performance-metrics">
-                <div class="metric">
-                    <div class="metric-value">92%</div>
-                    <div class="metric-label">On-Time Completion</div>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: 92%"></div>
-                    </div>
-                </div>
-                
-                <div class="metric">
-                    <div class="metric-value">4.8</div>
-                    <div class="metric-label">Client Rating</div>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: 96
+    </div>
+    
+    <script>
+        // Toggle sidebar for mobile view
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+            // Logout functionality
+    document.getElementById('logout').addEventListener('click', function(event) {
+        event.preventDefault();
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure you have a CSRF token for security
+            }
+        })..then(response => {
+            if (response.ok) {
+                window.location.href = '/login'; // Redirect to login page after logout
+            } else {
+                console.log('Logout failed. Please try again.');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            console.log('Logout failed. Please try again.');
+        });
+    });
+    </script>
+</body>
+</html>

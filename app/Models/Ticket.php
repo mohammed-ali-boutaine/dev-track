@@ -14,6 +14,7 @@ class Ticket extends Model
         'systeme',
         'software_id',
         'status',
+        'priority',
         'client_id',
         'admin_id',
         'dev_id',
@@ -25,6 +26,14 @@ class Ticket extends Model
         'signed_in' => 'boolean',
         'signed_in_at' => 'datetime',
     ];
+
+
+
+    public function isAssigned()
+    {
+        return !is_null($this->assigned_to);
+    }
+
 
     // Relationships
 
